@@ -1,0 +1,35 @@
+name: shckit
+description: A pure Dart codec for Adobe Photoshop SHC contour libraries.
+version: 0.1.0
+homepage: https://github.com/focale-editor/shckit
+repository: https://github.com/focale-editor/shckit
+
+topics:
+  - photoshop
+  - contours
+  - presets
+  - codec
+  - file-format
+
+screenshots:
+  - description: 'A flat illustration of Photoshop contour presets with a peaked curve and control points.'
+    path: screenshots/overview.png
+
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+
+dependencies:
+  pscore: '>=0.1.6 <0.2.0'
+
+dev_dependencies:
+  analyzer: ^14.4.0
+  checks: ^0.3.2
+  lints: ^6.1.0
+  release: ^0.1.11
+  test: ^1.32.0
+
+release:
+  changelog:
+    header: '# 📰 ShcKit changelog'
+    defaultIgnoredTypes: ['test']
+    defaultIgnoredScopes: ['repo', 'docs', 'version', 'deps', 'tools']
