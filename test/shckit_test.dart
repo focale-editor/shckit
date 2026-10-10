@@ -29,15 +29,16 @@ void main() {
   );
 
   group('codec', () {
-    test('writes the documented layout and reads it back identically', () {
+    test('writes the layout Photoshop uses and reads it back identically', () {
       final Uint8List bytes = ShcEncoder.encode(library);
       final ShcFile decoded = ShcDecoder.decode(bytes, options: const ShcDecodeOptions(mode: ShcDecodeMode.strict));
 
       check(ascii.decode(bytes.sublist(0, 4))).equals('8BFS');
-      // Header, then version 2: version, name (4 + 5 × 2), count, 3 points, 3 flags, range.
+      // Header, then version 2: version, name (4 + 5 × 2), curve format, count, 3 points, 3 flags, two zero fields.
       check(bytes.sublist(10, 14)).deepEquals([0, 0, 0, 2]);
-      check(bytes.sublist(28, 30)).deepEquals([0, 3]);
-      check(bytes.sublist(34, 38)).deepEquals([0, 255, 0, 128]);
+      check(bytes.sublist(28, 32)).deepEquals([0, 2, 0, 3]);
+      check(bytes.sublist(36, 40)).deepEquals([0, 255, 0, 128]);
+      check(bytes.sublist(bytes.length - 8)).deepEquals(List.filled(8, 0));
       check(decoded.contours.map((contour) => contour.name).toList()).deepEquals(['Cone', 'Linéaire']);
       check(decoded.contours.first.points.every((point) => !point.continuous)).isTrue();
       check(decoded.contours.last.version).equals(1);

@@ -114,7 +114,7 @@ Importing descriptor coordinates rounds and clamps them to 0–255. Missing cont
 
 ShcKit reads and writes contour libraries but does not evaluate curves or render layer effects. A host editor remains responsible for interpolation and applying the contour to its shadow, glow, satin, or bevel rendering.
 
-The layout follows Adobe's specification. Standalone Photoshop SHC samples have not yet been used to verify compatibility.
+Adobe's specification omits a 16-bit field before the point count. ShcKit follows the layout of real Photoshop libraries instead, and re-encodes them byte for byte; see [docs/SHC.md](docs/SHC.md).
 
 See [docs/SHC.md](docs/SHC.md) for the binary layout, compatibility rules, encoding behavior, and descriptor conversion.
 

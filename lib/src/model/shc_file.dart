@@ -28,22 +28,26 @@ final class ShcContour {
   /// Contour name.
   final String name;
 
+  /// Undocumented 16-bit field preceding the point count; Photoshop writes 2.
+  final int curveFormat;
+
   /// Control points in source order.
   final List<ShcPoint> points;
 
-  /// Lower bound of the input range, normally 0.
+  /// First trailing 32-bit field, which Adobe documents as the minimum input; Photoshop writes 0.
   final int minimumInput;
 
-  /// Upper bound of the input range, normally 255.
+  /// Second trailing 32-bit field, which Adobe documents as the maximum input; Photoshop writes 0.
   final int maximumInput;
 
   /// Creates a contour record.
   ShcContour({
     this.version = 2,
     required this.name,
+    this.curveFormat = 2,
     required List<ShcPoint> points,
     this.minimumInput = 0,
-    this.maximumInput = 255,
+    this.maximumInput = 0,
   }) : points = List<ShcPoint>.unmodifiable(points);
 
   /// Creates a record from a layer-style [contour] descriptor.

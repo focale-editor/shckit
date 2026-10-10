@@ -56,6 +56,7 @@ final class ShcDecoder extends Converter<List<int>, ShcFile> {
           throw ShcFormatException(message: 'Unsupported SHC contour version $recordVersion', source: bytes, offset: recordOffset);
         }
         final String name = _readName(reader, options, bytes);
+        final int curveFormat = reader.readUint16();
         final int pointCount = reader.readUint16();
         if (pointCount > options.maxPoints) {
           throw ShcFormatException(message: 'SHC point count $pointCount exceeds the configured ${options.maxPoints} limit', source: bytes, offset: reader.offset - 2);
@@ -71,6 +72,7 @@ final class ShcDecoder extends Converter<List<int>, ShcFile> {
           ShcContour(
             version: recordVersion,
             name: name,
+            curveFormat: curveFormat,
             points: [
               for (int point = 0; point < pointCount; point++) ShcPoint(horizontal: coordinates[point].horizontal, vertical: coordinates[point].vertical, continuous: continuity[point]),
             ],
@@ -132,6 +134,7 @@ final class ShcEncoder extends Converter<ShcFile, List<int>> {
         ..writeUint32(contour.version)
         ..writeUint32(contour.name.length + 1)
         ..writeUint16List([...contour.name.codeUnits, 0])
+        ..writeUint16(contour.curveFormat)
         ..writeUint16(contour.points.length);
       for (final ShcPoint point in contour.points) {
         writer

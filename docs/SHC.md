@@ -22,11 +22,12 @@ Each contour has the following fields:
 | --- | ---: | --- |
 | Record version | 4 bytes | 1 or 2 |
 | Name | 4 + 2n bytes | UTF-16 code-unit count, then the code units |
+| Curve format | 2 bytes | Not in Adobe's specification; Photoshop writes 2 |
 | Point count | 2 bytes | Number of control points |
 | Coordinates | 4 bytes per point | Vertical (output), then horizontal (input), normally 0–255 |
 | Continuity | 1 byte per point | Version 2 only: nonzero for smooth, zero for a corner |
-| Minimum input | 4 bytes | Normally 0 |
-| Maximum input | 4 bytes | Normally 255 |
+| Minimum input | 4 bytes | Named by Adobe's specification; Photoshop writes 0 |
+| Maximum input | 4 bytes | Named by Adobe's specification; Photoshop writes 0 |
 
 All coordinate pairs come before the continuity array. Version 1 omits that array and treats every point as smooth. The decoder preserves point order and input-range bounds without sorting or normalizing them.
 
@@ -34,7 +35,7 @@ Unknown record versions fail in both decoding modes because records have no oute
 
 ### Names
 
-Adobe's specification defines its Unicode strings as a code-unit count followed by a terminating null. ShcKit writes the null and counts it, as Photoshop's Action Descriptors do, and removes a terminal null when reading.
+The name is a code-unit count followed by the code units; Photoshop counts and writes a terminating null, and ShcKit removes it when reading.
 
 The count measures UTF-16 code units, including surrogate pairs as two units. The decoder also accepts a name without a terminal null; re-encoding appends one.
 
@@ -91,7 +92,7 @@ Use `ShcFile.contours` to browse named presets and `ShcContour.toContour()` to p
 
 ShcKit does not interpolate, evaluate, or render contours. Descriptor conversion preserves the supported name and point fields rather than arbitrary descriptor data.
 
-No public `.shc` file was available to validate against; the layout follows Adobe's specification.
+Two public contour libraries of 36 and 139 contours, all version 2 records with corner and smooth points, decode in strict mode and re-encode byte for byte. They showed that Adobe's specification omits the curve-format field and that the two trailing fields are zero. They are not redistributed with ShcKit.
 
 ## References
 
